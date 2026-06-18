@@ -2,8 +2,7 @@ module awi_model_library
 
     use fabm_types, only: type_base_model_factory, type_base_model
 
-    use awi_recom, only: type_awi_recom
-    ! Add use statements for new models here
+    use awi_recom_sms
 
     implicit none
 
@@ -25,9 +24,8 @@ contains
         class(type_base_model), pointer :: model
 
         select case (name)
-        case ('recom')
-            allocate(type_awi_recom :: model)
-            ! Add case statements for new models here
+        case ('recom_sms')
+            allocate(type_awi_recom_sms :: model)
         case default
             write(*, *) 'Error: Model ', trim(name), ' is not available in the REcoM model library.'
             stop

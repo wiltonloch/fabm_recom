@@ -1,6 +1,6 @@
 #include "fabm_driver.h"
 
-module awi_recom
+module awi_recom_sms
 
     use fabm_types
 
@@ -8,7 +8,7 @@ module awi_recom
 
     private
 
-    type, extends(type_base_model), public :: type_awi_recom
+    type, extends(type_base_model), public :: type_awi_recom_sms
 
         ! Dependencies
         type (type_horizontal_dependency_id) :: id_surface_air_pressure
@@ -65,7 +65,7 @@ module awi_recom
     contains
         procedure :: initialize
         procedure :: do
-    end type type_awi_recom
+    end type type_awi_recom_sms
 
 contains
 
@@ -77,12 +77,12 @@ contains
 
         implicit none
 
-        class(type_awi_recom), intent(inout), target :: self
+        class(type_awi_recom_sms), intent(inout), target :: self
         integer, intent(in) :: configunit
 
         call read_recom_namelist()
         call initialize_tracer_ids()
-        call allocate_and_init_diags(1)
+        call allocate_and_init_diags(2)
 
         call self%register_dependency(self%id_surface_air_pressure, standard_variables%surface_air_pressure)
         call self%register_dependency(self%id_temperature, standard_variables%temperature)
@@ -198,10 +198,10 @@ contains
 
         use mvars, only: vars_sprac
         use recom_extra, only: krill_resp
-        
+
        implicit none
 
-       class (type_awi_recom), intent(in) :: self
+       class (type_awi_recom_sms), intent(in) :: self
        _DECLARE_ARGUMENTS_DO_
 
         real(kind=wp) :: dt_d !< Size of time steps [day]
@@ -1279,7 +1279,7 @@ contains
                 + rho_N * arrFunc * O2Func * DON & ! Temperature and O2 dependent
                 ) * dt_b + sms(idin)
 
-        
+
         sms(idic) = ( &
                 -Cphot * PhyC & ! Small phytoplankton
                 - Cphot_Dia * DiaC & ! Diatoms
@@ -1349,7 +1349,7 @@ contains
                 - grazingFlux_phy3 * Chl2N * is_3zoo2det & ! Microzooplankton
                 ) * dt_b + sms(ipchl)
 
-        
+
         if (Grazing_detritus) then
             if (enable_3zoo2det) then
                 sms(idetn) = ( &
@@ -1770,7 +1770,7 @@ contains
                 - grazingFlux_dia3 * qSiN * is_3zoo2det & ! Microzooplankton
                 ) * dt_b + sms(idiasi)
 
-        
+
         if (enable_coccos) then
             sms(icocn) = ( &
                     +N_assim_cocco * CoccoC &
@@ -1970,8 +1970,8 @@ contains
                 - Zoo2RespFlux * is_3zoo2det & ! Macrozooplankton
                 - MicZooRespFlux * is_3zoo2det & ! Microzooplankton
                 ) * redO2C * dt_b + sms(ioxy)
-        
-        
+
+
         if (ciso) then
             sms(idic_13) = ( &
                     -Cphot * PhyC_13 & ! Small phyto photosynthesis
@@ -2218,4 +2218,4 @@ contains
         close (fileunit)
     end subroutine read_recom_namelist
 
-end module awi_recom
+end module awi_recom_sms
