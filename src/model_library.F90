@@ -3,6 +3,7 @@ module awi_model_library
     use fabm_types, only: type_base_model_factory, type_base_model
 
     use awi_recom_sms
+    use awi_recom_light_attenuation
 
     implicit none
 
@@ -26,6 +27,8 @@ contains
         select case (name)
         case ('recom_sms')
             allocate(type_awi_recom_sms :: model)
+        case ('recom_light_attenuation')
+            allocate(type_awi_recom_light_attenuation :: model)
         case default
             write(*, *) 'Error: Model ', trim(name), ' is not available in the REcoM model library.'
             stop

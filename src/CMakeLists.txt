@@ -1,6 +1,7 @@
 add_library(fabm_models_awi OBJECT
             model_library.F90
             recom_sms.F90
+            recom_light_attenuation.F90
            )
 
 set(RECOM_LIB_PATH "" CACHE FILEPATH "Path to librecom.a")
